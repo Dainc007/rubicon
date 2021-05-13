@@ -42,4 +42,22 @@
         @csrf
     </form>
 </div>
+
+<h6> Klienci z podziałem na liczbę zamówień</h6>
+@foreach($customers as $customer)
+<p>{{$customer->orders}}</p>
+@endforeach
+
+<h6> Klienci z podziałem na status występujący w danym typie plików</h6>
+@foreach($customers_by_status as $customer)
+<p>{{$customer->customers}}, {{$customer->status}}, {{$customer->file}}</p>
+@endforeach
+
+<h6> Klienci z podziałem na kraj i grupę</h6>
+@foreach($customers_by_group_and_country as $customer)
+<p>{{$customer->orders}},{{$customer->country}}, {{$customer->group_id}}</p>
+@endforeach
+
+
+
 @endsection

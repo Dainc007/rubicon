@@ -17,7 +17,21 @@ class CustomerController extends Controller
     public function index()
     {
         return view('customer.index', [
-            'customer' => Customer::all()
+            'customers' => Customer::groupBy('product')
+                ->selectRaw('count(customer) as orders')
+                ->limit(30)
+                ->orderBy('orders', 'DESC')
+                ->get(),
+
+            'customers_by_status' => Customer::groupBy('status')->groupBy('file')
+                ->selectRaw('count(file) as customers, file, status')
+                ->orderBy('customers', 'DESC')
+                ->get(),
+
+            'customers_by_group_and_country' => Customer::groupBy('group_id')->groupBy('country')
+                ->selectRaw('count(customer) as orders, group_id, country')
+                ->orderBy('orders', 'DESC')
+                ->get()
         ]);
     }
 
