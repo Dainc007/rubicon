@@ -16,3 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index'])->name('index');
+
+Route::post('/customers/csvImport', [App\Http\Controllers\CustomerController::class, 'csvImport'])
+->name('csv.import');
+
+Route::post('/customers/jsonImport', [App\Http\Controllers\CustomerController::class, 'jsonImport'])
+->name('json.import');
+
+Route::post('/customers/ldifImport', [App\Http\Controllers\CustomerController::class, 'ldifImport'])
+->name('ldif.import');

@@ -9,13 +9,17 @@ class Customer extends Model
 {
     use HasFactory;
 
-    static public const AVAILABLE_FILES = [
+    public const AVAILABLE_FILES = [
         'csv', 'json', 'ldil',
     ];
 
-    static public const AVAILABLE_STATUSES = [
-        'single', 'divorced', 'merried',
+    public const AVAILABLE_STATUSES = [
+        'single', 'divorced', 'married', 'common-law',
     ];
+
+    public const CSV = 'csv';
+    public const JSON = 'json';
+    public const LDIF = 'ldif';
 
     protected $fillable = [
         'customer',

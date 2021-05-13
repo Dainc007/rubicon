@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\CustomersImport;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -14,7 +16,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return view('customer.index', [
+            'customer' => Customer::all()
+        ]);
     }
 
     /**
@@ -33,53 +37,38 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function csvImport(Request $request)
     {
-        //
+        Excel::import(new CustomersImport, $request->file('csv')->store('temp'));
+        return back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Customer $customer)
+    public function jsonImport(Request $request)
     {
-        //
+        $json = $request->file('json');
+        $data = file_get_contents($json);
+        $objs = json_decode($data, true);
+
+        foreach ($objs['data'] as $row) {
+
+            $customer = new Customer();
+            $customer->customer = $row[0];
+            $customer->country = $row[1];
+            $customer->order = $row[2];
+            $customer->status = $row[3];
+            $customer->group = $row[4];
+            $customer->file = Customer::JSON;
+            $customer->save();
+        }
+
+        return back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Customer $customer)
+    public function ldifImport(Request $request)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Customer $customer)
-    {
-        //
+        $ldif = $request->file('ldif');
+        $data = file_get_contents($ldif);
+        
+        dd($data);
     }
 }
