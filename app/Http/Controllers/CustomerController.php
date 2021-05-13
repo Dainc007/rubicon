@@ -68,7 +68,6 @@ class CustomerController extends Controller
     {
         $ldif = $request->file('ldif');
         $data = file_get_contents($ldif);
-        
         dd($data);
     }
 }
